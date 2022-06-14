@@ -6,15 +6,36 @@ Quantity = NewType("Quantity", int)
 Sku = NewType("Sku", str)
 Reference = NewType("Reference", str)
 
-# Create your models here.
+
 @dataclass(frozen=True)
 class OrderLine:
+    """
+    As the order line has data but no identity (its identity is directly related to the order), we represent it using the Value Object Pattern.
+    A value object is uniquely represented by the data it holds and are usually immutable (in this case, frozen=True).
+    Compared through value equality.
+    """
+
     orderid: str
     sku: str
     qty: int
 
 
 class Batch:
+    """
+    Entity: a domain object that has long-lived (or persistent) identity (its values can change, but its identity doesn't - differently from value objects).
+    Compared through identity equality.
+    """
+
+    def __eq__(self, other):
+        # Defines the behavior of ==
+        if not isinstance(other, Batch):
+            return False
+        return other.reference == self.reference
+
+    def __hash__(self):
+        # Method used when we add these objects to sets or use them as dict keys
+        return hash(self.reference)
+
     def __init__(self, ref: str, sku: str, qty: int, eta: Optional[date]):
         self.reference = ref
         self.sku = sku
