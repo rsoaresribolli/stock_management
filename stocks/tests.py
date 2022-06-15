@@ -2,7 +2,7 @@ from datetime import date, timedelta
 
 from django.test import TestCase
 
-from .models import Batch, OrderLine
+from .models import Batch, OrderLine, OutOfStock, allocate
 
 # from model import ...
 
@@ -82,4 +82,11 @@ class AllocationTest(TestCase):
 
         allocation = allocate(line, [in_stock_batch, shipment_batch])
 
-        self.assertEqual(allocation == in_stock_batch.reference)
+        self.assertEqual(allocation, in_stock_batch.reference)
+
+    def test_raiser_out_of_stock_exception_if_cannot_allocate(self):
+        batch = Batch("batch1", "SMALL-FORK", 10, eta=today)
+        allocate(OrderLine("order1", "SMALL-FORK", 10), [batch])
+
+        with self.assertRaisesRegexp(OutOfStock, "SMALL-FORK"):
+            allocate(OrderLine("order2", "SMALL-FORK", 1), [batch])
