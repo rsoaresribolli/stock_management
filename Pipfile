@@ -5,10 +5,13 @@ name = "pypi"
 
 [packages]
 django = "*"
+setuptools = "*"
+stocks = {editable = true, path = "./src"}
 
 [dev-packages]
 black = "*"
 flake8 = "*"
+pytest = "*"
 
 [requires]
 python_version = "3.9"
