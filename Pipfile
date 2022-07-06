@@ -12,6 +12,7 @@ stocks = {editable = true, path = "./src"}
 black = "*"
 flake8 = "*"
 pytest = "*"
+isort = "*"
 
 [requires]
 python_version = "3.9"
